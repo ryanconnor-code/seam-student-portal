@@ -1,9 +1,12 @@
 # SEAM Student Portal
 
-A student portal demo — sign up, log in, view your profile, send payments, and
-vote in campus polls. Originally a 2022 Create React App bootcamp project, now
-fully modernized to **Vite + React 18 + TypeScript** with a real (mock)
-authentication flow and protected routes.
+**SEAM** stands for **S**tudent **E**nrollment & **A**cademic **M**anagement.
+
+A student portal demo — sign up, log in, register for courses, check grades,
+view your schedule, manage billing, and vote in campus polls. Originally a
+2022 Create React App bootcamp project, now fully modernized to
+**Vite + React 18 + TypeScript** with a real (mock) authentication flow and
+protected routes.
 
 > The app is fully self-contained: there is no backend. Accounts, sessions,
 > transactions, and poll results are persisted in the browser's `localStorage`.
