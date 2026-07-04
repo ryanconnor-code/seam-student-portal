@@ -8,6 +8,7 @@ import {
   ProgressBar,
 } from "../../components/portal";
 import { getCourses } from "../../data/store";
+import { isGraded } from "../../data/academics";
 
 const CourseCard = styled(Panel)`
   display: flex;
@@ -64,7 +65,11 @@ export function Courses() {
                 <div className="code">{c.code}</div>
                 <h3 className="title">{c.title}</h3>
               </div>
-              <Badge>{c.grade}</Badge>
+              {isGraded(c) ? (
+                <Badge>{c.grade}</Badge>
+              ) : (
+                <Badge $tone="info">In progress</Badge>
+              )}
             </div>
             <div className="meta">
               <FiUser /> {c.instructor}

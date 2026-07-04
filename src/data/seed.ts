@@ -155,6 +155,77 @@ export const seedCourses: Course[] = [
   },
 ];
 
+// Additional courses a student can register for (not enrolled by default).
+export const catalogExtra: Course[] = [
+  {
+    id: "c_cs210",
+    code: "CS 210",
+    title: "Introduction to Programming",
+    instructor: "Dr. Ada Lovelace",
+    credits: 3,
+    days: "MWF",
+    time: "09:00–09:50",
+    room: "Engineering 100",
+    progress: 0,
+    grade: "—",
+  },
+  {
+    id: "c_art130",
+    code: "ART 130",
+    title: "Digital Design Foundations",
+    instructor: "Prof. Frida Kahlo",
+    credits: 3,
+    days: "TR",
+    time: "11:00–12:15",
+    room: "Arts Center 12",
+    progress: 0,
+    grade: "—",
+  },
+  {
+    id: "c_hist200",
+    code: "HIST 200",
+    title: "Modern World History",
+    instructor: "Dr. Howard Zinn",
+    credits: 3,
+    days: "MW",
+    time: "13:00–14:15",
+    room: "Humanities 210",
+    progress: 0,
+    grade: "—",
+  },
+  {
+    id: "c_bio101",
+    code: "BIO 101",
+    title: "General Biology",
+    instructor: "Dr. Rosalind Franklin",
+    credits: 4,
+    // Intentionally clashes with ENGL 102 (TR 09:30–10:45) to demo conflicts.
+    days: "TR",
+    time: "09:30–10:45",
+    room: "Sciences 240",
+    progress: 0,
+    grade: "—",
+  },
+  {
+    id: "c_econ201",
+    code: "ECON 201",
+    title: "Principles of Microeconomics",
+    instructor: "Dr. Adam Smith",
+    credits: 3,
+    days: "MWF",
+    time: "11:00–11:50",
+    room: "Business 300",
+    progress: 0,
+    grade: "—",
+  },
+];
+
+/** The full course catalog: enrolled-by-default courses plus electives. */
+export const courseCatalog: Course[] = [...seedCourses, ...catalogExtra];
+
+/** Course ids the demo student starts out enrolled in. */
+export const defaultEnrolledIds: string[] = seedCourses.map((c) => c.id);
+
 export const seedCharges: BillingCharge[] = [
   {
     id: "b_tuition",

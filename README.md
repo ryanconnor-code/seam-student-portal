@@ -47,17 +47,24 @@ npm run typecheck  # type-check without emitting
   announcements, today's classes, and course-progress widgets.
 - **Courses** — enrolled courses with instructor, schedule, room, credits, and
   term progress.
-- **Grades** — term GPA, credit-weighted grade report, and quality points.
+- **Registration** — browse the full course catalog and add/drop courses, with
+  live enforcement of an 18-credit limit and time-conflict detection.
+- **Grades** — term GPA (credit-weighted, graded courses only), grade report,
+  and quality points.
 - **Schedule** — a Monday–Friday weekly timetable.
 - **Billing** — account balance, itemized charges you can pay (which records a
   payment), and recent payment history.
 - **Polls** — cast votes and watch live result bars update.
-- **Information** — the logged-in user's personal, contact, academic, and
-  financial details (card number masked).
+- **Information** — view *and edit* your personal, contact, academic, and
+  financial details, plus change your password (card number masked).
 
-Protected pages redirect to `/login` when you're signed out, then return you to
-where you were headed after a successful login. The layout is responsive: the
-sidebar collapses into a hamburger menu on narrow screens.
+Other niceties:
+
+- **Dark mode** — toggle in the top bar; the choice is persisted and defaults to
+  your OS preference.
+- **Responsive** — the sidebar collapses into a hamburger menu on narrow screens.
+- Protected pages redirect to `/login` when you're signed out, then return you to
+  where you were headed after a successful login.
 
 ## Project structure
 

@@ -10,15 +10,20 @@ import {
   FiGrid,
   FiLogOut,
   FiMenu,
+  FiMoon,
+  FiPlusCircle,
+  FiSun,
   FiUser,
   FiX,
 } from "react-icons/fi";
 import { useAuth } from "../auth/AuthContext";
+import { useThemeMode } from "../theme/ThemeContext";
 import logo from "../assets/logo.png";
 
 const NAV_ITEMS = [
   { to: "/app", label: "Overview", icon: FiGrid, end: true },
   { to: "/app/courses", label: "Courses", icon: FiBookOpen },
+  { to: "/app/registration", label: "Registration", icon: FiPlusCircle },
   { to: "/app/grades", label: "Grades", icon: FiAward },
   { to: "/app/schedule", label: "Schedule", icon: FiCalendar },
   { to: "/app/billing", label: "Billing", icon: FiCreditCard },
@@ -161,6 +166,25 @@ const MenuToggle = styled.button`
   }
 `;
 
+const IconButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background-color: ${({ theme }) => theme.colors.surfaceAlt};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.light2};
+  }
+`;
+
 const UserChip = styled.div`
   display: flex;
   align-items: center;
@@ -218,6 +242,7 @@ const Backdrop = styled.div<{ $open: boolean }>`
 
 export function DashboardLayout() {
   const { user, logout } = useAuth();
+  const { mode, toggle } = useThemeMode();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -265,6 +290,13 @@ export function DashboardLayout() {
             {open ? <FiX /> : <FiMenu />}
           </MenuToggle>
           <div style={{ flex: 1 }} />
+          <IconButton
+            type="button"
+            aria-label={mode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            onClick={toggle}
+          >
+            {mode === "dark" ? <FiSun /> : <FiMoon />}
+          </IconButton>
           <UserChip>
             <div className="meta">
               <div className="name">

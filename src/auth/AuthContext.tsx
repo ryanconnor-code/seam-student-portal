@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { User } from "../data/types";
+import type { Profile, User } from "../data/types";
 import {
   ensureSeeded,
   findUserByEmail,
@@ -30,6 +30,8 @@ type AuthContextValue = {
   login: (email: string, password: string) => Promise<void>;
   signup: (input: SignupInput) => Promise<void>;
   logout: () => void;
+  updateProfile: (profile: Profile) => void;
+  changePassword: (current: string, next: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -91,9 +93,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  const updateProfile = useCallback(
+    (profile: Profile) => {
+      if (!user) return;
+      const updated: User = {
+        ...user,
+        email: profile.personal.email.trim() || user.email,
+        profile,
+      };
+      saveUser(updated);
+      setUser(updated);
+    },
+    [user],
+  );
+
+  const changePassword = useCallback(
+    async (current: string, next: string) => {
+      await delay();
+      if (!user) throw new Error("You are not signed in.");
+      if (user.password !== current) {
+        throw new Error("Current password is incorrect.");
+      }
+      const updated: User = { ...user, password: next };
+      saveUser(updated);
+      setUser(updated);
+    },
+    [user],
+  );
+
   const value = useMemo(
-    () => ({ user, login, signup, logout }),
-    [user, login, signup, logout],
+    () => ({ user, login, signup, logout, updateProfile, changePassword }),
+    [user, login, signup, logout, updateProfile, changePassword],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

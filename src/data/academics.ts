@@ -13,21 +13,35 @@ const GRADE_POINTS: Record<string, number> = {
   "F": 0.0,
 };
 
+/** Sentinel grade for a course that is enrolled but not yet graded. */
+export const IN_PROGRESS = "—";
+
+export function isGraded(course: Course): boolean {
+  return course.grade in GRADE_POINTS;
+}
+
 export function gradePoints(letter: string): number {
   return GRADE_POINTS[letter] ?? 0;
 }
 
-/** Credit-weighted GPA across the given courses. */
+/** Credit-weighted GPA across graded courses only. */
 export function computeGpa(courses: Course[]): number {
-  const totalCredits = courses.reduce((sum, c) => sum + c.credits, 0);
-  if (totalCredits === 0) return 0;
-  const weighted = courses.reduce(
+  const graded = courses.filter(isGraded);
+  const credits = graded.reduce((sum, c) => sum + c.credits, 0);
+  if (credits === 0) return 0;
+  const weighted = graded.reduce(
     (sum, c) => sum + gradePoints(c.grade) * c.credits,
     0,
   );
-  return Math.round((weighted / totalCredits) * 100) / 100;
+  return Math.round((weighted / credits) * 100) / 100;
 }
 
+/** Total credits the student is enrolled in this term. */
 export function totalCredits(courses: Course[]): number {
   return courses.reduce((sum, c) => sum + c.credits, 0);
+}
+
+/** Credits that carry a final grade (i.e. count toward GPA). */
+export function gradedCredits(courses: Course[]): number {
+  return courses.filter(isGraded).reduce((sum, c) => sum + c.credits, 0);
 }

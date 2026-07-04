@@ -9,10 +9,17 @@ import {
   Table,
 } from "../../components/portal";
 import { getCourses } from "../../data/store";
-import { computeGpa, gradePoints, totalCredits } from "../../data/academics";
+import {
+  computeGpa,
+  gradedCredits,
+  gradePoints,
+  isGraded,
+} from "../../data/academics";
+import type { Course } from "../../data/types";
 
-function tone(letter: string) {
-  const p = gradePoints(letter);
+function tone(course: Course) {
+  if (!isGraded(course)) return "info" as const;
+  const p = gradePoints(course.grade);
   if (p >= 3.7) return "success" as const;
   if (p >= 3.0) return "info" as const;
   if (p >= 2.0) return "warning" as const;
@@ -22,10 +29,13 @@ function tone(letter: string) {
 export function Grades() {
   const courses = getCourses();
   const gpa = computeGpa(courses);
-  const credits = totalCredits(courses);
+  const credits = gradedCredits(courses);
   const qualityPoints =
-    Math.round(courses.reduce((s, c) => s + gradePoints(c.grade) * c.credits, 0) * 10) /
-    10;
+    Math.round(
+      courses
+        .filter(isGraded)
+        .reduce((s, c) => s + gradePoints(c.grade) * c.credits, 0) * 10,
+    ) / 10;
 
   return (
     <div>
@@ -57,7 +67,9 @@ export function Grades() {
                 <td>{c.instructor}</td>
                 <td className="right">{c.credits}</td>
                 <td className="right">
-                  <Badge $tone={tone(c.grade)}>{c.grade}</Badge>
+                  <Badge $tone={tone(c)}>
+                    {isGraded(c) ? c.grade : "In progress"}
+                  </Badge>
                 </td>
               </tr>
             ))}

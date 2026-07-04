@@ -1,6 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
-import { theme } from "./theme";
+import { AppThemeProvider } from "./theme/ThemeContext";
 import { GlobalStyle } from "./styles/GlobalStyle";
 import { AuthProvider } from "./auth/AuthContext";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
@@ -14,6 +13,7 @@ import { NotFound } from "./pages/NotFound";
 
 import { Overview } from "./pages/portal/Overview";
 import { Courses } from "./pages/portal/Courses";
+import { Registration } from "./pages/portal/Registration";
 import { Grades } from "./pages/portal/Grades";
 import { Schedule } from "./pages/portal/Schedule";
 import { Billing } from "./pages/portal/Billing";
@@ -22,7 +22,7 @@ import { Information } from "./pages/portal/Information";
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <AppThemeProvider>
       <GlobalStyle />
       <AuthProvider>
         <BrowserRouter>
@@ -38,6 +38,7 @@ export default function App() {
               <Route path="/app" element={<DashboardLayout />}>
                 <Route index element={<Overview />} />
                 <Route path="courses" element={<Courses />} />
+                <Route path="registration" element={<Registration />} />
                 <Route path="grades" element={<Grades />} />
                 <Route path="schedule" element={<Schedule />} />
                 <Route path="billing" element={<Billing />} />
@@ -56,6 +57,6 @@ export default function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
-    </ThemeProvider>
+    </AppThemeProvider>
   );
 }

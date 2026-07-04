@@ -9,9 +9,10 @@ import type {
   User,
 } from "./types";
 import {
+  courseCatalog,
+  defaultEnrolledIds,
   seedAnnouncements,
   seedCharges,
-  seedCourses,
   seedPolls,
   seedTransactions,
   seedUsers,
@@ -23,6 +24,7 @@ const KEYS = {
   transactions: "seam.transactions",
   polls: "seam.polls",
   charges: "seam.charges",
+  enrollment: "seam.enrollment",
 } as const;
 
 function read<T>(key: string, fallback: T): T {
@@ -46,6 +48,8 @@ export function ensureSeeded(): void {
   if (localStorage.getItem(KEYS.polls) === null) write(KEYS.polls, seedPolls);
   if (localStorage.getItem(KEYS.charges) === null)
     write(KEYS.charges, seedCharges);
+  if (localStorage.getItem(KEYS.enrollment) === null)
+    write(KEYS.enrollment, defaultEnrolledIds);
 }
 
 // --- Users -----------------------------------------------------------------
@@ -98,10 +102,34 @@ export function savePolls(polls: Poll[]): void {
   write(KEYS.polls, polls);
 }
 
-// --- Courses & announcements (static reference data) -----------------------
+// --- Courses & enrollment --------------------------------------------------
 
+/** The full course catalog (static reference data). */
+export function getCatalog(): Course[] {
+  return courseCatalog;
+}
+
+export function getEnrolledIds(): string[] {
+  return read<string[]>(KEYS.enrollment, defaultEnrolledIds);
+}
+
+/** Courses the student is currently enrolled in, in catalog order. */
 export function getCourses(): Course[] {
-  return seedCourses;
+  const enrolled = new Set(getEnrolledIds());
+  return courseCatalog.filter((c) => enrolled.has(c.id));
+}
+
+export function enrollCourse(id: string): string[] {
+  const ids = getEnrolledIds();
+  if (!ids.includes(id)) ids.push(id);
+  write(KEYS.enrollment, ids);
+  return ids;
+}
+
+export function dropCourse(id: string): string[] {
+  const ids = getEnrolledIds().filter((existing) => existing !== id);
+  write(KEYS.enrollment, ids);
+  return ids;
 }
 
 export function getAnnouncements(): Announcement[] {
