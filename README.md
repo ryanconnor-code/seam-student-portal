@@ -1,70 +1,95 @@
-# Getting Started with Create React App
+# SEAM Student Portal
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A student portal demo — sign up, log in, view your profile, send payments, and
+vote in campus polls. Originally a 2022 Create React App bootcamp project, now
+fully modernized to **Vite + React 18 + TypeScript** with a real (mock)
+authentication flow and protected routes.
 
-## Available Scripts
+> The app is fully self-contained: there is no backend. Accounts, sessions,
+> transactions, and poll results are persisted in the browser's `localStorage`.
 
-In the project directory, you can run:
+## Demo account
 
-### `npm start`
+The portal seeds a ready-to-use account on first load:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+| Email           | Password      |
+| --------------- | ------------- |
+| `demo@seam.edu` | `password123` |
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+You can also register a brand-new account from the Sign Up page.
 
-### `npm test`
+## Getting started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+npm run dev      # start the dev server at http://localhost:3000
+```
 
-### `npm run build`
+Other scripts:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm run build      # type-check and produce a production build in dist/
+npm run preview    # preview the production build
+npm run lint       # run ESLint
+npm run typecheck  # type-check without emitting
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## What the app does
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Public**
 
-### `npm run eject`
+- **Landing / Login / Sign Up / Forgot Password** — auth flow with Formik + Yup
+  validation and a proper show/hide password toggle.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+**Portal** (a sidebar app shell at `/app`, guarded by login)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Overview** — greeting, stat cards (courses, GPA, credits, balance due),
+  announcements, today's classes, and course-progress widgets.
+- **Courses** — enrolled courses with instructor, schedule, room, credits, and
+  term progress.
+- **Grades** — term GPA, credit-weighted grade report, and quality points.
+- **Schedule** — a Monday–Friday weekly timetable.
+- **Billing** — account balance, itemized charges you can pay (which records a
+  payment), and recent payment history.
+- **Polls** — cast votes and watch live result bars update.
+- **Information** — the logged-in user's personal, contact, academic, and
+  financial details (card number masked).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Protected pages redirect to `/login` when you're signed out, then return you to
+where you were headed after a successful login. The layout is responsive: the
+sidebar collapses into a hamburger menu on narrow screens.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Project structure
 
-## Learn More
+```
+src/
+  assets/            images (logo, avatar, background)
+  auth/              AuthContext (mock auth) + ProtectedRoute guard
+  components/        DashboardLayout (sidebar shell), TextInput,
+                     ui.ts (public UI kit), portal.tsx (portal UI kit)
+  data/              types, seed data, localStorage store, academics helpers
+  lib/               small utilities (currency formatting)
+  pages/             public screens (Landing, Login, Signup, …)
+  pages/portal/      authenticated screens (Overview, Courses, Grades, …)
+  styles/            global styles
+  theme.ts           design tokens (colors, radii, shadows)
+  App.tsx            router + providers
+  main.tsx           entry point
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Notes on the modernization
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This was rebuilt from an old CRA project. Highlights of what changed:
 
-### Code Splitting
+- Migrated from an unbootable `react-scripts@2.1.8` / React 17 setup to Vite +
+  React 18.
+- Converted the codebase to TypeScript in `strict` mode.
+- Replaced the dead Redux "session" store and stubbed-out auth actions with a
+  real `localStorage`-backed auth context and route guards.
+- Fixed a pile of bugs: password fields rendered as plain text, sign-up confirm
+  fields whose names didn't match their validators (so they never validated),
+  invalid hex colors, and numerous CSS typos.
+- Consolidated duplicated styled components into a single themed UI kit.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+> **Security note:** passwords are stored in plaintext in `localStorage` purely
+> because this is a frontend-only demo. Never do this in a real application.
